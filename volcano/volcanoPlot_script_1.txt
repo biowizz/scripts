@@ -1,0 +1,79 @@
+# downloadded from http://www.r-bloggers.com/using-volcano-plots-in-r-to-visualize-microarray-and-rna-seq-results/
+# Download the data from github (click the "raw" button, save as a text file called "results.txt").
+# https://gist.github.com/stephenturner/806e31fce55a8b7175af
+res <- read.table("TvsN.txt", header=TRUE)
+head(res)
+ 
+# Make a basic volcano plot
+with(res, plot(log2FoldChange, -log10(pvalue), pch=20, main="Volcano plot", xlim=c(-8,8), ylim=c(0,9)))
+ 
+# Add colored points: red if padj<0.05, orange of log2FC>1, green if both)
+# All genes greater than 1 fold
+with(subset(res, abs(log2FoldChange)>1), points(log2FoldChange, -log10(pvalue), pch=20, col="orange"))
+# All genes greater than 1 fold and FDR significant
+with(subset(res, padj<.05 ), points(log2FoldChange, -log10(pvalue), pch=20, col="red"))
+
+# 
+with(subset(res, padj<.05 & log2FoldChange<1), points(log2FoldChange, -log10(pvalue), pch=20, col="green"))
+
+with(subset(res, padj<.05 & log2FoldChange>1), points(log2FoldChange, -log10(pvalue), pch=20, col="red"))
+ 
+# Label points with the textxy function from the calibrate plot
+library(calibrate)
+
+with(subset(res, padj<.05 & log2FoldChange<=-4.656112459), textxy(log2FoldChange, -log10(pvalue), labs=Gene, cex=.5))
+with(subset(res, padj<.05 & log2FoldChange>=4.294227331), textxy(log2FoldChange, -log10(pvalue), labs=Gene, cex=.5))
+
+#c87137 inkscape colour fro black dots
+
+###################### For TvsP
+res <- read.table("TvsP.txt", header=TRUE)
+head(res)
+ 
+ svg("PvsT_1.svg")
+# Make a basic volcano plot
+with(res, plot(log2FoldChange, -log10(pvalue), pch=20, main="Volcano plot", xlim=c(-8,8),ylim=c(0,9)))
+ 
+# Add colored points: red if padj<0.05, orange of log2FC>1, green if both)
+# All genes greater than 1 fold
+with(subset(res, abs(log2FoldChange)>1), points(log2FoldChange, -log10(pvalue), pch=20, col="orange"))
+# All genes greater than 1 fold and FDR significant
+with(subset(res, padj<.05 ), points(log2FoldChange, -log10(pvalue), pch=20, col="red"))
+
+# 
+with(subset(res, padj<.05 & log2FoldChange<1), points(log2FoldChange, -log10(pvalue), pch=20, col="green"))
+
+with(subset(res, padj<.05 & log2FoldChange>1), points(log2FoldChange, -log10(pvalue), pch=20, col="red"))
+ 
+# Label points with the textxy function from the calibrate plot
+library(calibrate)
+
+with(subset(res, padj<.05 & log2FoldChange<=-3.812551392), textxy(log2FoldChange, -log10(pvalue), labs=Gene, cex=.5))
+with(subset(res, padj<.05 & log2FoldChange>=3.922960789), textxy(log2FoldChange, -log10(pvalue), labs=Gene, cex=.5))
+dev.off()
+
+###################### For PvsN
+res <- read.table("PvsN.txt", header=TRUE)
+head(res)
+ 
+ svg("PvsN.svg")
+# Make a basic volcano plot
+with(res, plot(log2FoldChange, -log10(pvalue), pch=20, main="Volcano plot", xlim=c(-8,8),ylim=c(0,9)))
+ 
+# Add colored points: red if padj<0.05, orange of log2FC>1, green if both)
+# All genes greater than 1 fold
+with(subset(res, abs(log2FoldChange)>1), points(log2FoldChange, -log10(pvalue), pch=20, col="orange"))
+# All genes greater than 1 fold and FDR significant
+with(subset(res, padj<.05 ), points(log2FoldChange, -log10(pvalue), pch=20, col="red"))
+
+# 
+with(subset(res, padj<.05 & log2FoldChange<1), points(log2FoldChange, -log10(pvalue), pch=20, col="green"))
+
+with(subset(res, padj<.05 & log2FoldChange>1), points(log2FoldChange, -log10(pvalue), pch=20, col="red"))
+ 
+# Label points with the textxy function from the calibrate plot
+library(calibrate)
+
+with(subset(res, padj<.05 & log2FoldChange<=-2.554316114), textxy(log2FoldChange, -log10(pvalue), labs=Gene, cex=.5))
+with(subset(res, padj<.05 & log2FoldChange>=2.692414009), textxy(log2FoldChange, -log10(pvalue), labs=Gene, cex=.5))
+dev.off()
