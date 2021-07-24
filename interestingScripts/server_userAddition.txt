@@ -1,0 +1,23 @@
+#To give sudo permission to user
+sudo usermod -aG sudo bobby
+
+### To create separate group
+sudo chown prady:prady prady
+
+### To change group ###
+sudo chgrp mlsc4 prady
+
+
+### Permission
+sudo chmod 770 *
+
+### Add user to goup
+sudo usermod -a -G mlsc4 prady
+
+### Add user
+sudo adduser prady
+
+
+sudo chmod -R 770 joslin/
+
+

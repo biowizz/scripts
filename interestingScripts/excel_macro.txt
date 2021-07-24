@@ -1,0 +1,39 @@
+Below macro splits the comma separated file in one column to multi line file also keeping the adjacent line.
+
+Sub RedistributeData()
+  Dim X As Long, LastRow As Long, A As Range, Table As Range, Data1() As String, Data2() As String
+  Dim DelimitedColumn1 As String, DelimitedColumn2 As String
+  Const Delimiter As String = ","
+  Const TableColumns As String = "A:M"
+  Const StartRow As Long = 2
+  DelimitedColumn1 = InputBox("First delimited column letter designation...")
+  If DelimitedColumn1 = "" Or DelimitedColumn1 Like "*[!A-Za-z]*" Then Exit Sub
+  DelimitedColumn2 = InputBox("First delimited column letter designation...")
+  If DelimitedColumn2 = "" Or DelimitedColumn2 Like "*[!A-Za-z]*" Then Exit Sub
+  Application.ScreenUpdating = False
+  LastRow = Columns(TableColumns).Find(What:="*", SearchOrder:=xlRows, _
+            SearchDirection:=xlPrevious, LookIn:=xlFormulas).Row
+  For X = LastRow To StartRow Step -1
+    Data1 = Split(Cells(X, DelimitedColumn1), Delimiter)
+    Data2 = Split(Cells(X, DelimitedColumn2), Delimiter)
+    If UBound(Data1) > 0 Then
+      Intersect(Rows(X + 1), Columns(TableColumns)).Resize(UBound(Data1)).Insert xlShiftDown
+    End If
+    If Len(Cells(X, DelimitedColumn1)) Then
+      Cells(X, DelimitedColumn1).Resize(UBound(Data1) + 1) = WorksheetFunction.Transpose(Data1)
+    End If
+    If Len(Cells(X, DelimitedColumn2)) Then
+      Cells(X, DelimitedColumn2).Resize(UBound(Data2) + 1) = WorksheetFunction.Transpose(Data2)
+    End If
+  Next
+  LastRow = Cells(Rows.Count, DelimitedColumn1).End(xlUp).Row
+  On Error Resume Next
+  Set Table = Intersect(Columns(TableColumns), Rows(StartRow).Resize(LastRow - StartRow + 1))
+  If Err.Number = 0 Then
+    Table.SpecialCells(xlBlanks).FormulaR1C1 = "=R[-1]C"
+    Columns(DelimitedColumn1).SpecialCells(xlFormulas).Clear
+    Table.Value = Table.Value
+  End If
+  On Error GoTo 0
+  Application.ScreenUpdating = True
+End Sub

@@ -1,0 +1,5 @@
+https://gist.github.com/igordot/4467f1b02234ff864e61
+
+gtfToGenePred -genePredExt -geneNameAsName2 genes.gtf refFlat.tmp.txt
+paste <(cut -f 12 refFlat.tmp.txt) <(cut -f 1-10 refFlat.tmp.txt) > refFlat.txt
+gzip refFlat.txt

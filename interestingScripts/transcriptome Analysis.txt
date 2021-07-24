@@ -1,0 +1,36 @@
+###############Copy files from torrent server to our server#################
+scp RNA_Barcode_None_001_rawlib.basecaller.bam root@172.16.17.242:/san2/mallya/transcriptome/rawdata
+
+scp /results/analysis/output/Home/Auto_user_PRO-5-Ion_RNA_-_Whole_Transcriptome_30_013/plugin_out/downloads/RNA_Barcode_None_001_R_2014_04_09_16_54_54_user_PRO-5-Ion_RNA_-_Whole_Transcriptome.fastq root@172.16.17.242:/san2/mallya/transcriptome/rawdata
+
+
+PRO-5 = sample2
+PRO-6 = sample1
+
+############### Trim adapter (adapter used P1) ###########
+cutadapt -b ATCACCGACTGCCCATAGAGAGGAAAGCGG sample1.fastq > sample1_adapterTrimmed.fastq
+cutadapt -m 16 -b ATCACCGACTGCCCATAGAGAGGAAAGCGG sample1.fastq > sample1_adapterTrimmed.fastq &
+cutadapt -m 16 -b ATCACCGACTGCCCATAGAGAGGAAAGCGG sample2.fastq > sample2_adapterTrimmed.fastq &
+############### 
+
+ cutadapt -e ERROR-RATE -a ADAPTER-SEQUENCE input.fastq > output.fastq
+
+See the README file for more help and examples.
+
+Options:
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+  -f FORMAT, --format=FORMAT
+                        Input file format; can be either 'fasta', 'fastq' or
+                        'sra-fastq'. Ignored when reading csfasta/qual files
+                        (default: auto-detect from file name extension).
+
+  Options that influence how the adapters are found:
+    Each of the following three parameters (-a, -b, -g) can be used
+    multiple times and in any combination to search for an entire set of
+    adapters of possibly different types. All of the given adapters will
+    be searched for in each read, but only the best matching one will be
+    trimmed (but see the --times option).
+
+    -a ADAPTER, --adapter=ADAPTER
+                        Sequence of an adapter that was ligated to the

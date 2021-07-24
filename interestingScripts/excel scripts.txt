@@ -1,0 +1,3 @@
+### To find a particular symbol in the cell ###
+
+=if(iserror(find("<",A1)),0,1)

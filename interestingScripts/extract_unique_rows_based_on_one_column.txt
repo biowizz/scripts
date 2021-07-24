@@ -1,0 +1,37 @@
+http://stackoverflow.com/questions/1915636/is-there-a-way-to-uniq-by-column
+
+stack2@example.com,2009-11-27 01:05:47.893000000,example.net,127.0.0.1
+overflow@example.com,2009-11-27 00:58:29.793000000,example.net,255.255.255.0
+overflow@example.com,2009-11-27 00:58:29.646465785,example.net,256.255.255.0
+
+sort -u -t, -k1,1 file
+
+-u for unique
+-t, so comma is the delimiter
+-k1,1 for the key field 1
+
+awk -F"," '!_[$1]++' file
+-F sets the field separator.
+$1 is the first field.
+_[val] looks up val in the hash _(a regular variable).
+++ increment, and return old value.
+! returns logical not.
+there is an implicit print at the end.
+
+
+cat mycvs.cvs | tr -s ',' ' ' | awk  '{print $3" "$2" "$1}' | uniq -c -f2
+
+gives:
+
+1 01:05:47.893000000 2009-11-27 tack2@domain.com
+2 00:58:29.793000000 2009-11-27 overflow@domain2.com
+
+To consider multiple column.
+
+Sort and give unique list based on column 1 & column 3
+
+sort -u -t : -k 1,1 -k 3,3 test.txt
+
+-t : = colon is separator
+
+-k 1,1 -k 3,3 = based on column 1 & column 3

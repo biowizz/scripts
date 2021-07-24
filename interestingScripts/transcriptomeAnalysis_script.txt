@@ -1,0 +1,44 @@
+###############Copy files from torrent server to our server#################
+scp RNA_Barcode_None_001_rawlib.basecaller.bam root@172.16.17.242:/san2/mallya/transcriptome/rawdata
+
+scp /results/analysis/output/Home/Auto_user_PRO-5-Ion_RNA_-_Whole_Transcriptome_30_013/plugin_out/downloads/RNA_Barcode_None_001_R_2014_04_09_16_54_54_user_PRO-5-Ion_RNA_-_Whole_Transcriptome.fastq root@172.16.17.242:/san2/mallya/transcriptome/rawdata
+
+
+PRO-5 = sample2
+PRO-6 = sample1
+
+############### Trim adapter (adapter used P1) ###########
+cutadapt -m 16 -b GGCCAAGGCG -o adaptorTrim.fastq input.fastq
+cutadapt -m 16 -b GGCCAAGGCG -o sam2_adapterTrimmed.fastq sample2.fastq
+ 
+###############
+cutadapt -b ATCACCGACTGCCCATAGAGAGGAAAGCGG sample1.fastq > sample1_adapterTrimmed.fastq
+cutadapt -m 16 -b ATCACCGACTGCCCATAGAGAGGAAAGCGG sample1.fastq > sample1_adapterTrimmed.fastq &
+cutadapt -m 16 -b ATCACCGACTGCCCATAGAGAGGAAAGCGG sample2.fastq > sample2_adapterTrimmed.fastq &
+############### 
+
+############### Align the data using tophat ###############
+nohup tophat2 -p 18 --keep-fasta-order --GTF ../../reference/RefSeq_hg19.gtf ../../reference/hg19_ref/hg19 ../rawdata/sample1/adapterTrim_sample1.fastq
+
+ bam2fastq -o ../../bowtie/unmapped.fastq unmapped.bam
+
+bowtie2 --local --very-sensitive-local -p 12 --mm -x ../../reference/hg19_ref/hg19 -U unmapped.fastq | samtools view -uhS -F4 - | samtools sort - unmapped_remap
+
+############### merge bam files with Picard module MergeSamFiles #############
+java -jar /home/sandeep/Documents/picard-tools-1.107/MergeSamFiles.jar USE_THREADING=true MSD=true AS=true \I=../tophat/tophat_out/accepted_hits.bam I=../bowtie/unmapped_remap.bam \o=aligned_sample1.bam
+java -jar /home/sandeep/Documents/picard-tools-1.107/MergeSamFiles.jar USE_THREADING=true MSD=true AS=true \I=../tophat/tophat_out/accepted_hits.bam I=../bowtie/unmapped_remap.bam \o=aligned_sample2.bam
+
+
+############## Convert bam to sam for counting ###################
+samtools view aligned_sample1.bam > sample1.sam &
+samtools view aligned_sample2.bam > sample2.sam
+
+# ls -lha to check the file size in folder
+#  df -h to check the space on the machine
+
+############# count the reads #############
+ htseq-count ../sample1.sam ../../../reference/RefSeq_hg19.gtf > counts
+ 
+ less counts 
+
+

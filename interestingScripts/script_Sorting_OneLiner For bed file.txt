@@ -1,0 +1,6 @@
+Create bedGraph file
+sort -k1,1 -k2,2n in.bedGraph > out.bedGraph
+
+convert bedGraph to bigwig file
+bedGraphToBigWig KaphaLogRatio.bedGraph chrom.sizes KaphaLogRatio.bigwig
+

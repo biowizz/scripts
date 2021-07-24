@@ -1,0 +1,26 @@
+http://onetipperday.blogspot.in/2012/05/simple-way-to-get-reads-length.html
+Using perl: 
+cat input.fq | perl -ne '$s=<>;<>;<>;chomp($s);print length($s)."\n";' > input.readslength.txt
+Using awk:
+cat input.fq | awk '{if(NR%4==2) print length($1)}' > input.readslength.txt
+
+######### Our data normal1 ###
+cat ../../mitochondria/normal1/normal1.fastq | perl -ne '$s=<>;<>;<>;chomp($s);print length($s)."\n";' > input.readslength.txt
+sort input.readslength.txt | uniq -c > normal1_readStatistics.txt
+
+
+######## normal2 ###
+cat ../../mitochondria/normal2/normal2.fastq | perl -ne '$s=<>;<>;<>;chomp($s);print length($s)."\n";' > input.readslength.txt
+sort input.readslength.txt | uniq -c > normal2_readStatistics.txt
+
+######## premalignant ###
+cat ../../mitochondria/premalignant/premalignant.fastq | perl -ne '$s=<>;<>;<>;chomp($s);print length($s)."\n";' > input.readslength.txt
+sort input.readslength.txt | uniq -c > premalignant_readStatistics.txt
+
+######## tumor1 ###
+ cat ../../mitochondria/tumor1/tumor1.fastq | perl -ne '$s=<>;<>;<>;chomp($s);print length($s)."\n";' > input.readslength.txt  
+ sort input.readslength.txt | uniq -c > tumor1_readStatistics.txt
+
+######## tumor2 ###
+cat ../../mitochondria/tumor2/tumor2.fastq | perl -ne '$s=<>;<>;<>;chomp($s);print length($s)."\n";' > input.readslength.txt
+sort input.readslength.txt | uniq -c > tumor2_readStatistics.txt

@@ -1,0 +1,10 @@
+https://www.biostars.org/p/77442/
+
+---> faSomeRecords 
+faSomeRecords - Extract multiple fa records
+usage:
+   faSomeRecords in.fa listFile out.fa
+options:
+   -exclude - output sequences not in the list file.
+   
+   

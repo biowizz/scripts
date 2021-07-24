@@ -1,0 +1,3 @@
+### in this program, empty spaces in tab separated files are replaced with a X
+
+awk -F"\t" -v OFS="\t" '{ for(N=1; N<=NF; N++) if($N=="") $N="X" } 1' infile

@@ -1,0 +1,10 @@
+find . -name '*.fna' -exec cp -b '{}' ../fungalFasta/ \;
+
+http://ubuntuforums.org/showthread.php?t=1959228
+
+find <dir> -name <filenames-pattern>
+-exec = for each found object perform the following:
+mv -b {} destination_dir
+{} is a placeholder for the name of the found object
+-exec is ended with escaped \; or ';' so it knows where the inner command ends
+

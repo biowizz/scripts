@@ -1,0 +1,11 @@
+### extracts column 9 first
+# converts all ; to tabs
+# prints required columns
+# remove duplicate columns
+# remove all quotes from file
+
+cat gencode.v19.annotation.gtf | cut -f 9 | sed 's/;/\t/g' | awk '{print $2"\t"$4"\t"$10}' | awk '!seen[$0]++'  | sed 's/"//g'
+
+#### To extract only non-pseudogene from gtf
+
+ grep -v 'gene_type "pseudogene"' gencode.v19.annotation.gtf | cut -f 9 | awk '{print $6"\t"$8"\t"$10"\t"$12}' | awk '!seen[$0]++' | sed 's/"//g' > geneDescription.txt

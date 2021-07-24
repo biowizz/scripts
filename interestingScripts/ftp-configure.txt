@@ -1,0 +1,92 @@
+Set up an anonymous FTP server with vsftpd in less than a minute
+
+http://www.g-loaded.eu/2008/12/02/set-up-an-anonymous-ftp-server-with-vsftpd-in-less-than-a-minute/
+
+ December 2, 2008  George NotarasServers 11 Comments
+This small HOWTO describes how to configure vsftpd for an anonymous FTP site in order to make files available across your local network or the internet. The scenario this guide is based on is to quickly make a linux distribution’s installation tree available across the local network in order to be used for a network installation. In this example, I run an anonymous FTP service on my desktop computer making the CentOS installation tree available directly from its installation DVD. This should give you an idea about how to share files or directories that do not physically exist in the root directory of the FTP site.
+
+vsftpd Configuration
+Assuming vsftpd has already been installed in the standard location, the directory /etc/vsftpd/, which contains its configuration files, should exist. You can edit vsftpd’s default configuration file (/etc/vsftpd/vsftpd.conf), but in this example, we will create a new configuration file from scratch.
+
+
+ 
+Create a new configuration file named /etc/vsftpd/vsftpd-anon.conf and open it in your favourite text editor and write down the directives that follow:
+
+Set the server to run in standalone mode. This means that vsftpd will run into the background and handle the incoming requests on its own. The alternative method (listen=NO) would require you to set up a xinetd service. This would not be a bad idea, but for the sake of this example, it would be a waste of time.
+
+listen=YES
+The following directives prevent local users from logging in and enables anonymous access respectively.
+
+local_enable=NO
+anonymous_enable=YES
+The following directive disables write access to the ftp server’s filesystem. This is a global switch, so noone will be able to upload or modify any files on your ftp site.
+
+write_enable=NO
+Sets the root directory for anonymous connections. By default, this is /var/ftp/.
+
+anon_root=/var/ftp
+The following configuration directives are optional and can be safely omitted.
+
+Limit the rate at which anonymous users can retrieve files.
+
+anon_max_rate=2048000
+Enable logging information about user logins an file transfers. The log file is located at /var/log/vsftpd.log.
+
+xferlog_enable=YES
+Set the interface and port the service will listen on. By default, vsftpd will bind to all local network interfaces on port 21, which is the standard port of the File Transfer Protocol. Note that listen_address accepts only numeric IP addresses (no hostnames).
+
+listen_address=192.168.0.100
+listen_port=21
+
+
+The entire vsftpd-anon.conf file
+
+#
+# Sample anonymous FTP server configuration
+#
+# Mandatory directives
+#
+listen=YES
+local_enable=NO
+anonymous_enable=YES
+write_enable=NO
+anon_root=/var/ftp
+#
+# Optional directives
+#
+anon_max_rate=2048000
+xferlog_enable=YES
+listen_address=192.168.0.100
+listen_port=21
+
+
+Start or Stop the FTP server
+Assuming you have created the supplementary vsftpd-anon.conf configuration file, run as user root:
+
+vsftpd /etc/vsftpd/vsftpd-anon.conf
+To stop the service run:
+
+killall vsftpd
+Alternatively, you can send the SIGTERM signal to a specific vsftpd process.
+
+On the other hand, if you had edited vsftpd’s default configuration file, you could start/stop the service using the /etc/init.d/vsftpd initscript.
+
+Sharing files and directories
+An FTP server without any files is like having a swimming pool without any water in it. In order to make some files and directories available through your FTP service you have two options:
+
+Copy or move the files or directories inside the anon_root directory.
+Create bind mounts of the directories you want to share in the anon_root directory.
+You may wonder why you cannot just create some symbolic links inside anon_root pointing to the directories you want to share. Even if you created those symlinks and connected to the service using an FTP client, you would notice that you are not permitted to reach the linked location. This happens because anonymous users are restricted (chrooted) to anon_root and, therefore, no location outside this directory is accessible using symlinks.
+
+Bind mounts are the solution to this problem. When bind-mounting, you mount a directory (A) to another directory (B) on the same or different filesystem, so that the contents of directory A appear as contents of directory B. It’s like a symlink, but at a lower level of the filesystem and that’s why you can reach locations outside the chroot jail.
+
+In our scenario, the installation tree of a Linux distribution is shared through the FTP service. It is assumed that the installation medium has been inserted into the drive and either the system or you have mounted it, for example, to the directory /media/CentOS/. We want the contents of the DVD to be accessible through the FTP server, so we need to bind-mount the DVD contents to a directory inside anon_root. As user ‘root‘ issue the following command:
+
+mount --bind /media/CentOS /var/ftp/pub
+Now, connecting to the FTP service you will notice that the contents of the pub/ directory is the CentOS installation tree.
+
+It is quite obvious that, despite the fact that vsftpd does not support the creation of a virtual filesystem (mainly a virtual directory structure) internally, one can be easily implemented with bind-mounts.
+
+Do not forget the firewall
+When we run a server temporarily on the desktop computer, we tend to forget to open the necessary ports on the filewall. In the case of vsftpd, you should open port 21 or the port number you have assigned to the listen_port configuration directive. Please consult the documentation of your firewall management application about how to perform this action.
+

@@ -1,0 +1,1 @@
+for i in *.bam; do samtools sort $i $i.sorted && echo $i "bam sorted" && samtools index $i.sorted.bam; done

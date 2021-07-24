@@ -1,0 +1,1 @@
+java -XX:+UseParallelGC -XX:ParallelGCThreads=24 -Xmx8g -jar

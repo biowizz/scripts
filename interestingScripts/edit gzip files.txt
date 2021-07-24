@@ -1,0 +1,21 @@
+# reove a line from .gz file
+# http://www.unix.com/unix-for-dummies-questions-and-answers/152710-deleting-first-line-gz-file.html
+ 
+ 
+gzip -dc sample1.test.wig.gz | tail -n +2 | gzip -c > sample1.test.new.wig.gz
+ 
+### Add new line to .gz file
+  
+gzip -dc sample1.test.wig.gz | sed '1itrack type=wiggle_0 name=Untreated description=Before_treatment visibility=display_mode color=51,255,255 altColor=153,153,255 priority=priority autoScale=on gridDefault=on graphType=bar windowingFunction=mean+whiskers smoothingWindow=2' | gzip -c > sample1.test.new.wig.gz
+
+# combine these two steps
+
+gzip -dc sample1.test.wig.gz | tail -n +2 | sed '1itrack type=wiggle_0 name="Untreated" description="Before treatment" visibility=full color=51,255,255 altColor=153,153,255 priority=10 autoScale=on gridDefault=on graphType=bar windowingFunction=mean+whiskers smoothingWindow=2' | gzip -c > sample1.test.new.wig.gz
+
+
+#### combine these 2 code and test for sample 2
+
+gzip -dc sample2.wig.gz | tail -n +2 | sed '1itrack type=wiggle_0 name="Treated" description="After treatment" visibility=full color=255,102,102 altColor=255,178,102 priority=10 autoScale=on gridDefault=on graphType=bar windowingFunction=mean+whiskers smoothingWindow=2' | gzip -c > sample2.test.new.wig.gz
+
+
+gzip -dc sample2.wig.gz | sed '1itrack type=wiggle_0 name="Treated" description="After treatment" visibility=full color=255,102,102 altColor=255,178,102 priority=10 autoScale=on gridDefault=on graphType=bar windowingFunction=mean+whiskers smoothingWindow=2' | gzip -c > sample2.test.new.wig.gz

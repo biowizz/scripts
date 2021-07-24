@@ -1,0 +1,10 @@
+export SAMTOOLS_HOME=/Users/ecerami/libraries/samtools-0.1.19
+export PATH=$SAMTOOLS_HOME:$PATH
+export PATH=$SAMTOOLS_HOME/bcftools/:$PATH
+export PATH=$SAMTOOLS_HOME/misc/:$PATH
+
+###### try this as well ###########
+export PATH=$PATH:/home/sandeep/Documents/bam2fastq-1.1.0
+
+###### To add link file to your bin folder ######
+sudo ln -s /pth/file /usr/local/bin

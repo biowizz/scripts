@@ -1,0 +1,3 @@
+http://ubuntuforums.org/showthread.php?t=1665346
+
+find ./ -type f -exec mv '{}' ../bacterialGenomes/ \;

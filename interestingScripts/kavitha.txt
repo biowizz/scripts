@@ -1,0 +1,11 @@
+### To split multi fasta file
+awk '/^>/{s=++d".fasta"} {print > s}' file.txt
+ 
+ 
+# To cretae 500 base long fasta files
+mkdir contig1
+./faSplit size 1.fasta 500 contig1_
+mv contig1_* contig1
+
+ 
+ 

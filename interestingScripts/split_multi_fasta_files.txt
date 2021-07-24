@@ -1,0 +1,7 @@
+https://bioexpressblog.wordpress.com/2013/04/05/split-multi-fasta-sequence-file/
+awk '/^>/{s=++d".fasta"} {print > s}'
+
+
+https://code.google.com/p/nash-bioinformatics-codelets/downloads/detail?name=split_fasta.pl
+
+ 
