@@ -1,1 +1,2 @@
 
+cat gencode.v21.annotation.gtf | tr '; ' '\t' | grep -P 'gene_type\t"protein_coding"'| awk '{print $1"\t"$4"\t"$5"\t"$7"\t"$14"\t"$18}' | sed 's/"//g' | awk '!seen[$0]++'| uniq -c -f4 > proteinCoding_geneCordinates.txt
